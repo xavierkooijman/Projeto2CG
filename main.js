@@ -23,19 +23,25 @@ const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x020202 });
 // Palm
 const palm = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 0.3), material);
 palm.position.set(0, -1.5, 0);
+
+const thumbpalm = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.3), material);
+palm.add(thumbpalm);
+thumbpalm.position.set(-1.1, -0.5, 0.2);
+thumbpalm.rotateY(0.4);
+
 scene.add(palm);
 
 // Finger parameters
 const fingerLength = 0.7;
 const fingerWidth = 0.15;
-const fingerSpacing = 0.4;
+const fingerSpacing = 0.5;
 const fingers = [];
 
 // Create fingers
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 4; i++) {
     const fingerGroup = new THREE.Group();
 
-    // Finger base segment
+    // Finger base joint
 		const baseJoint = new THREE.Group();
     const baseSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
 		baseSegment.position.y = fingerLength / 2;
@@ -79,21 +85,66 @@ for (let i = 0; i < 5; i++) {
     sphereMiddle1.add(tipJoint);
 
     // Position finger group relative to palm
-    fingerGroup.position.set((i - 2) * fingerSpacing, 0, 0);
+    fingerGroup.position.set((i - 1.5) * fingerSpacing, 0, 0);
     palm.add(fingerGroup);
-		fingerGroup.position.y = 0.3;
+    fingerGroup.position.y = 0.3;
     fingers.push({ fingerGroup, sphereBase, middleJoint, tipJoint });
 }
 
+// Thumb base joint
+const thumbGroup = new THREE.Group();
+
+const baseJoint = new THREE.Group();
+const baseSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
+baseSegment.position.y = fingerLength / 2;
+
+const sphereBase = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+sphereBase.add(baseSegment);
+sphereBase.position.y = 0;
+
+baseJoint.add(sphereBase);
+baseJoint.position.y = fingerLength;
+thumbGroup.add(baseJoint);
+
+// Thumb tip joint
+const tipJoint = new THREE.Group();
+const tipSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
+tipSegment.position.y = fingerLength / 2;
+
+const fingertip = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+fingertip.position.y = fingerLength / 2;
+tipSegment.add(fingertip);
+		
+const sphereMiddle2 = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+sphereMiddle2.add(tipSegment);
+sphereMiddle2.position.y = 0;
+
+tipJoint.add(sphereMiddle2);
+tipJoint.position.y = fingerLength;
+sphereBase.add(tipJoint);
+
+// Position finger group relative to palm
+thumbpalm.add(thumbGroup);
+thumbGroup.position.set(-0.3, -0.2, 0);
+thumbGroup.rotateY(-0.5)
+
 // GUI setup
 const gui = new GUI();
+
+const folder = gui.addFolder(`Finger 1`);
+
+folder.add(sphereBase.rotation, 'z', -1.05, 0,0.01).name('Base Curl');
+folder.add(tipJoint.rotation, 'z', -Math.PI / 2, 0, 0.01).name('Tip Curl');
+folder.add(thumbGroup.rotation, 'z', -0.02, 0.02, 0.01).name('Side Angle');
+
 fingers.forEach((finger, index) => {
-    const folder = gui.addFolder(`Finger ${index + 1}`);
-    folder.add(finger.sphereBase.rotation, 'x', 0, Math.PI / 2, 0.01).name('Base Curl');
+    const folder = gui.addFolder(`Finger ${index + 2}`);
+    folder.add(finger.sphereBase.rotation, 'x', 0, 1.05, 0.01).name('Base Curl');
     folder.add(finger.middleJoint.rotation, 'x', 0, Math.PI / 2, 0.01).name('Middle Curl');
     folder.add(finger.tipJoint.rotation, 'x', 0, Math.PI / 2, 0.01).name('Tip Curl');
     folder.add(finger.fingerGroup.rotation, 'z', -0.02, 0.02, 0.01).name('Side Angle');
 });
+
 
 // Animation loop
 function animate() {
