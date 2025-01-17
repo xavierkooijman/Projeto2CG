@@ -17,65 +17,81 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.update();
 
 // Materials
-const material = new THREE.MeshStandardMaterial({ color: 0xe7a183 });
-const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xe7a183 });
+const material = new THREE.MeshBasicMaterial( {color: 0xbf9b9b} ); 
+const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0x020202 });
 
 // Palm
-const palm = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 1), material);
+const palm = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 0.5), material);
 palm.position.set(0, -2, 0);
 scene.add(palm);
 
 // Finger parameters
-const fingerLength = 1;
-const fingerWidth = 0.3;
-const numFingers = 5;
+const fingerLength = 0.8;
+const fingerWidth = 0.15;
 const fingerSpacing = 0.4;
 const fingers = [];
 
 // Create fingers
-for (let i = 0; i < numFingers; i++) {
+for (let i = 0; i < 5; i++) {
     const fingerGroup = new THREE.Group();
 
-    // Finger base segment
-    const baseSegment = new THREE.Mesh(new THREE.BoxGeometry(fingerWidth, fingerLength, fingerWidth), material);
+    // Finger base joint
+		const baseJoint = new THREE.Group();
+    const baseSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
+
+		const sphereBase = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+    sphereBase.position.y = -0.4;
+    baseSegment.add(sphereBase);
+
     baseSegment.position.y = fingerLength / 2;
-    fingerGroup.add(baseSegment);
+		baseJoint.add(baseSegment);
+		baseJoint.position.y = fingerLength;
+    fingerGroup.add(baseJoint);
 
     // Finger middle joint
     const middleJoint = new THREE.Group();
-    const middleSegment = new THREE.Mesh(new THREE.BoxGeometry(fingerWidth, fingerLength, fingerWidth), material);
+    const middleSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
     middleSegment.position.y = fingerLength / 2;
+
+		const sphereMiddle1 = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+    sphereMiddle1.position.y = -0.4;
+    middleSegment.add(sphereMiddle1);
+
     middleJoint.add(middleSegment);
     middleJoint.position.y = fingerLength;
     baseSegment.add(middleJoint);
 
     // Finger tip joint
     const tipJoint = new THREE.Group();
-    const tipSegment = new THREE.Mesh(new THREE.BoxGeometry(fingerWidth, fingerLength / 2, fingerWidth), material);
-    tipSegment.position.y = fingerLength / 4;
+    const tipSegment = new THREE.Mesh(new THREE.CylinderGeometry( fingerWidth, fingerWidth, fingerLength, 32 ), material);
+    tipSegment.position.y = fingerLength / 2;
+
+		const fingertip = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+    fingertip.position.y = fingerLength / 2;
+    tipSegment.add(fingertip);
+		
+		const sphereMiddle2 = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth), sphereMaterial);
+    sphereMiddle2.position.y = -0.4;
+    tipSegment.add(sphereMiddle2);
+
     tipJoint.add(tipSegment);
     tipJoint.position.y = fingerLength;
     middleSegment.add(tipJoint);
 
-    // Fingertip (sphere)
-    const fingertip = new THREE.Mesh(new THREE.SphereGeometry(fingerWidth / 1.9), sphereMaterial);
-    fingertip.position.y = fingerLength / 4;
-    tipSegment.add(fingertip);
-
     // Position finger group relative to palm
-    fingerGroup.position.set((i - 2) * fingerSpacing, 0.5, 0);
+    fingerGroup.position.set((i - 2) * fingerSpacing, 0, 0);
     palm.add(fingerGroup);
-    fingers.push({ fingerGroup, baseSegment, middleJoint, tipJoint });
+    fingers.push({ fingerGroup, baseJoint, middleJoint, tipJoint });
 }
 
 // GUI setup
 const gui = new GUI();
 fingers.forEach((finger, index) => {
     const folder = gui.addFolder(`Finger ${index + 1}`);
-    folder.add(finger.baseSegment.rotation, 'x', -Math.PI / 2, Math.PI / 2, 0.01).name('Base Curl');
-    folder.add(finger.middleJoint.rotation, 'x', -Math.PI / 2, Math.PI / 2, 0.01).name('Middle Curl');
-    folder.add(finger.tipJoint.rotation, 'x', -Math.PI / 2, Math.PI / 2, 0.01).name('Tip Curl');
-    folder.add(finger.fingerGroup.rotation, 'z', -Math.PI / 4, Math.PI / 4, 0.01).name('Side Angle');
+    folder.add(finger.baseJoint.rotation, 'x', 0, Math.PI / 2, 0.01).name('Base Curl');
+    folder.add(finger.middleJoint.rotation, 'x', 0, Math.PI / 2, 0.01).name('Middle Curl');
+    folder.add(finger.tipJoint.rotation, 'x', 0, Math.PI / 2, 0.01).name('Tip Curl');
+    folder.add(finger.fingerGroup.rotation, 'z', -0.02, 0.02, 0.01).name('Side Angle');
 });
 
 // Animation loop
