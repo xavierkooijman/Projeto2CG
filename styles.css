@@ -44,8 +44,14 @@ body {
   left: 1200px;
 }
 
+.star-lord-middle-finger{
+  top: 700px;
+  left: 300px;
+}
+
 .btn:hover{
   background-color: black;
   border-color: white;
   color: white;
 }
+
