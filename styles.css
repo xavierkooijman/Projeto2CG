@@ -1,3 +1,51 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #4b46b2;
+}
+
+.btn{
+  position: absolute;
+  border: 2px solid black;
+  background-color: white;
+  padding: 16px 24px;
+  font-size: 24px;
+  border-radius: 48px;
+  cursor: pointer;
+  transition: all ease-out 0.2s;
+}
+
+.middle-finger{
+  top: 500px;
+  left: 400px;
+}
+
+.rock{
+  top: 400px;
+  left: 1300px;
+}
+
+.open{
+  top: 700px;
+  left: 1250px;
+}
+
+.fist{
+  top: 100px;
+  left: 500px;
+}
+
+.peace{
+  top: 150px;
+  left: 1200px;
+}
+
+.btn:hover{
+  background-color: black;
+  border-color: white;
+  color: white;
 }
