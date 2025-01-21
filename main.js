@@ -155,7 +155,7 @@ fingers.forEach((finger, index) => {
 });
 
 
-//function for animatin finger joints, receives target rotation values and duration and animates from the current joints rotation to target ones 
+//function for animating finger joints, receives target rotation values and duration and animates from the current joints rotation to target ones 
 
 function animateFingerJoints(targetRotations, duration = 500) {
   const startTime = performance.now();
@@ -194,23 +194,11 @@ function animateFingerJoints(targetRotations, duration = 500) {
 
       // Interpolate thumb joints
 
-      sphereBase.rotation.z = THREE.MathUtils.lerp(
-        initialRotations.sphereBase.z,
-        targetRotations.sphereBase.z,
-        t
-      );
+      sphereBase.rotation.z = THREE.MathUtils.lerp(initialRotations.sphereBase.z,targetRotations.sphereBase.z,t);
 
-      tipJoint.rotation.z = THREE.MathUtils.lerp(
-        initialRotations.tipJoint.z,
-        targetRotations.tipJoint.z,
-        t
-      );
+      tipJoint.rotation.z = THREE.MathUtils.lerp(initialRotations.tipJoint.z,targetRotations.tipJoint.z,t);
 
-      thumbGroup.rotation.z = THREE.MathUtils.lerp(
-        initialRotations.thumbGroup.z,
-        targetRotations.thumbGroup.z,
-        t
-      );
+      thumbGroup.rotation.z = THREE.MathUtils.lerp(initialRotations.thumbGroup.z,targetRotations.thumbGroup.z,t);
 
       // Continue animation if not finished
       if (t < 1) {
