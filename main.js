@@ -11,6 +11,7 @@ const btnRock = document.getElementById("btnRock");
 const btnMiddleFinger = document.getElementById("btnMiddleFinger");
 const btnStarLordMiddleFinger = document.getElementById("btnStarLordMiddleFinger");
 const btnET = document.getElementById("btnET");
+const btnRotate = document.getElementById("btnRotate");
 const btnReset = document.getElementById("btnReset");
 
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -544,7 +545,7 @@ btnET.addEventListener("click", () =>{
   setTimeout(() => {
     animateFingerJoints(targetRotations2, 2000);
     animatePalm({palm: {x: -0.67, y: 3.04}}, 2000);
-  }, 1200);
+  }, 1100);
 });
 
 btnReset.addEventListener("click", () =>{
@@ -562,4 +563,8 @@ btnReset.addEventListener("click", () =>{
 
   animateFingerJoints(targetRotations, 500);
   animatePalm({palm: {x: 0, y: 0}}, 500);
+});
+
+btnRotate.addEventListener("click", () =>{
+  animatePalm({palm: {x: 0, y: 3.04}}, 1000);
 });
