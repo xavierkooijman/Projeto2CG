@@ -4,12 +4,7 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #4b46b2;
-}
-
 .btn{
-  position: absolute;
   border: 2px solid black;
   background-color: white;
   padding: 16px 24px;
@@ -19,34 +14,14 @@ body {
   transition: all ease-out 0.2s;
 }
 
-.middle-finger{
-  top: 500px;
-  left: 400px;
-}
-
-.rock{
-  top: 400px;
-  left: 1300px;
-}
-
-.open{
-  top: 700px;
-  left: 1250px;
-}
-
-.fist{
-  top: 100px;
-  left: 500px;
-}
-
-.peace{
-  top: 150px;
-  left: 1200px;
-}
-
-.star-lord-middle-finger{
-  top: 700px;
-  left: 300px;
+.buttons{
+  position: absolute;
+  bottom: 0;
+  padding: 48px;
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  width: 100%;
 }
 
 .btn:hover{
