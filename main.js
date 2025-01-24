@@ -32,6 +32,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 
 // Load HDRI environment map
+//HDRI environment map retirado de https://polyhaven.com/a/rogland_clear_night
 const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
 const hdriLoader = new RGBELoader()
@@ -241,6 +242,7 @@ function animateFingerJoints(targetRotations, duration = 500) {
       const t = Math.min(elapsed / duration, 1); // Interpolation factor (0 to 1)
 
       // Interpolate finger joints
+      //https://www.youtube.com/watch?v=YJB1QnEmlTs
       fingers.forEach((finger, i) => {
           const target = targetRotations.fingers[i];
           const initial = initialRotations.fingers[i];
